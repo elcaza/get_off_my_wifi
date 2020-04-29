@@ -161,4 +161,4 @@ ifconfig <interfaz> up
 + <a href="https://hackernoon.com/forcing-a-device-to-disconnect-from-wifi-using-a-deauthentication-attack-f664b9940142" target="_blank">Forcing a device to disconnect from WiFi using a deauthentication attack</a>
 + <a href="https://www.aircrack-ng.org/doku.php?id=deauthentication" target="_blank">Aircrack Deauthentication</a>
 + <a href="https://github.com/spacehuhn/esp8266_deauther" target="_blank">esp8266_deauther</a>
-+ <a href="+ https://www.atareao.es/como/procesos-en-segundo-plano-en-linux/" target="_blank">PROCESOS EN SEGUNDO PLANO EN LINUX</a>
++ <a href="https://www.atareao.es/como/procesos-en-segundo-plano-en-linux/" target="_blank">PROCESOS EN SEGUNDO PLANO EN LINUX</a>
