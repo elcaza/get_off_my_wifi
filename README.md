@@ -184,6 +184,77 @@ ifconfig <interfaz> up
 
 # Creación de un Fake Access Point
 
+En ciertas ocasiones (Retos CTF principalmente) es posible que nos pidan encontrar el password de una red WIFI a partir de un cliente que está buscando un punto de acceso. 
+
+El escenario es el siguiente:
++ Al momento de listar las redes de nuestro alrededor (Paso 4), nos aparece un cliente que emite un PROBE con un nombre_de_red_wifi. El paquete PROBE básicamente es el cliente diciendo, "Hey, ¿Acaso está esta red WIFI por aquí?
++ Al notar esto nosotros podemos hacer un access point falso con ayuda de **hostapd** para que el cliente diga. ¡Oh, nombre_de_red_wifi, te he estado buscando! Mira, aquí te va mi Handshake
++ Por supuesto, como nuestro fake Access Point no será el mismo que el que el cliente tiene registrado esté se mantendrá mandando el handshake. 
++ Entonces nosotros capturamos el tráfico de nuestro falso AP (Access Point) y posteriormente realizamos fuerza bruta al handshake capturado.
++ Requerimos dos tarjetas de red
+	+ 1 para realizar la captura de tráfico
+	+ 1 Para montar el Fake AP
+
+¿Cómo hacerlo?
+
+## A) Obtenemos nuestro cliente en busca de cierto WIFI
+Seguimos los pasos 1-4 de la sección **Comandos aircrack-ng**
+
+## B) Montamos nuestro fake AP
+1. Instalamos hostapd
+```
+sudo apt install hostapd
+```
+2. Seguimos los pasos 1-3 de la sección **Comandos aircrack-ng**
+3. Creamos un archivo de configuración para hostapd
+```
+vim hostapd.conf
+```
+
+Ingresamos el siguiente contenido
+
+```
+interface=wlan0
+driver=nl80211
+ssid=YeahHub
+hw_mode=g
+channel=11
+macaddr_acl=0
+ignore_broadcast_ssid=0
+auth_algs=1
+wpa=2
+wpa_passphrase=yeahhub123
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=CCMP
+wpa_group_rekey=86400
+ieee80211n=1
+wme_enabled=1
+```
+
+Significado:
++ interface = Wireless interface to host access point on i.e. wlan0.
++ driver = nl80211 is the new 802.11 netlink interface public header which is now replaced by cfg80211.
++ ssid = Name of the wireless network
++ hw_mode = Sets the operating mode of the interface and the allowed channels. (Generally uses a, b and g)
++ channel = Sets the channel for hostapd to operate on. (From 1 to 13)
++ macaddr_acl = Used for Mac Filtering (0 – disable, 1 – enable)
++ ignore_broadcast_ssid = Used to create hidden AP
++ auth_algs = Defines Authentication Algorithm (0 – for open, 1 – for shared)
++ wpa_passphrase = Contains your wireless password
+
+Para nosotros bastará con cambiar la línea de ssid con el nombre que necesitemos
+
+## C) Lanzamos nuestro fake AP
+``` 
+hostapd hostapd.conf
+```
++ Donde `hostapd.conf` es el archivo que acabamos de crear
++ Si realizamos los pasos 1-4 de **Comandos aircrack-ng** debemos poder observar nuestra red fake
+
+## D) Obtenemos nuestra contraseña 
+Una vez hecho esto únicamente resta hacer los pasos 1-7 de **Comandos aircrack-ng** y con suerte obtendremos nuestra contraseña
+
+
 # Anexo 1: Comando jobs
 
 # Anexo 2: Listado de redes
@@ -203,8 +274,8 @@ ifconfig <interfaz> up
 	+ El punto (despues del 54) indica que esa red soporta un preámbulo corto o “short preamble”.
 + **ENC:** Algoritmo de encriptación que se usa. 
 	+ OPN = no existe encriptación (abierta)
-	+ “WEP?” = WEP u otra (no se han capturado suficientes paquetes de datos para saber si es WEP o WPA/WPA2), 
-	+ WEP (sin el interrogante) indica WEP estática o dinámica, 
+	+ “WEP?” = WEP u otra (no se han capturado suficientes paquetes de datos para saber si es WEP o WPA/WPA2) 
+	+ WEP (sin el interrogante) indica WEP estática o dinámica
 	+ WPA o WPA2 en el caso de que se use TKIP o CCMP.
 + **CIPHER:** Detector cipher. Puede ser CCMP, WRAP, TKIP, WEP, WEP40, o WEP104.
 + **AUTH:** El protocolo de autenticación usado. Puede ser: 
