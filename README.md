@@ -256,6 +256,69 @@ Una vez hecho esto únicamente resta hacer los pasos 1-7 de **Comandos aircrack-
 
 
 # Anexo 1: Comando jobs
+Algunos comandos bloquean la terminal ya que es usada como la salida estándar. Cuando trabajamos en una sola terminal esto puede ser engorroso. Para solucionar esto podemos hacer uso de los procesos en segunda plano que Linux nos brinda. Aquí mostraremos los comandos básicos, para información complementaria por favor vea la sección de **Información complementaria**
+
+## Correra algo en segundo plano
+Bastará con añadir un `&` luego del comando ejecutado.
+
+```
+ping google.com &
+```
+Sin embargo, el comando anterior seguirá utilizando nuestra terminal como salida estándar, haciendo que toda la salida de nuestro comando ejecutado vaya a nuestra pantalla principal.
+
+Para solucionarlo podemos redireccionar la salida estándar a un archivo
+
+
+```
+ping google.com > salida.out &
+```
++ Lo anterior hace la redirección de salida estándar
+
+```
+ping google.com > salida.out 2>&1 &
+```
++ Lo anterior hace la redirección de salida estándar & error output
+
+## Recuperar un proceso en segundo plano
+Primero usamos `jobs` para saber el número de proceso
+
+```
+jobs
+```
++ Esto nos devolverá el identificador del proceso con el título
+
+Posteriormente `fg %NUMBER` donde NUMBER es el número del proceso que obtuvimos de `jobs`
+```
+fg %1
+```
+
+## Volver a enviar un proceso a segundo plano
+Primero requieres devolverlo a segundo plano. Esto se logra con `Ctrl+Z`
+
+Sin embargo al utilizar el atajo de teclado el proceso se detiene. Para reactivarlo solamente se utiliza `bg %NUMBER` y el proceso que se pondrá en marcha de nuevo. Donde NUMBER es el número que obtuvimos de el comando `jobs`
+
+```
+bg %1
+```
+
+## Para finalizar un proceso en segundo plano
+Usamos `jobs` para ubicar nuestro proceso
+
+```
+jobs
+```
+Usamos `kill %NUMBER` donde NUMBER es el número de nuestro proceso
+
+```
+kill %1
+```
+
+## Conclusión
++ `jobs` para conocer los procesos en segundo plano
++ `fg` te permite traer el proceso a primer plano
++ `bg` puedes enviar el proceso a segundo plano
++ `kill` para matar un proceso en segundo plano
+
 
 # Anexo 2: Listado de redes
 
