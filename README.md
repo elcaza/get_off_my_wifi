@@ -1,12 +1,12 @@
 # Get off my wifi
 
-**Contenido:**
+Esta es la colección de notas sobre ataques WIFI con la que me hubiera gustado encontrarme hace algunos años. Entre otras cosas, esta guía permitirá:
 
-+ Notas para banear a los usuarios no autorizados de tu red WIFI.
-+ Notas para ataques de diccionario a una red WIFI con aircrack-ng
++ Banear a los usuarios no autorizados de tu red WIFI.
++ Ataques de diccionario a una red WIFI con aircrack-ng
 	+ Ataque a Router
 	+ Ataque a cliente a través de un Fake Access Point
-+ Notas para los retos WIFI en ctf.live
++ Resolver los retos WIFI planteados en ctf.live
 
 **Advertencia:** Este material es meramente educativo. Y claro, debe probarse únicamente con redes que nos pertenecen.
 
@@ -357,8 +357,53 @@ Justo debajo
 + **Probes:** Los ESSIDs a los cuales ha intentado conectarse el cliente.	
 
 # Anexo 3: Captura del tráfico de red
+¿Qué es el **handshake**? ¿Acaso se envía la contraseña en texto claro?
+
+Las contraseñas WIFI jamás son enviadas en texto plano. En su lugar llevan a cabo un intercambio denominado **handshake**. Cuya idea es algo parecido a la llave pública y llave privada. Intercambian un mensaje cifrado y si son capaces de descifrarlo entonces se da por hecho que conocen la contraseña.
+
+Es por esa razón que un atacante no podría simplemente montar un fake AP e interceptar la contraseña que el cliente le manda. 
+
+Sin embargo, es posible interceptar este **handshake** para posteriormente realizarle una ataque de diccionario.
 
 # Anexo 4: Ataque de diccionario para averiguar el password WIFI
+
+## ¿Qué es el ataque de diccionario?
+Una vez obtenido el **handshake** es posible realizar una ataque de diccionario para tratar de crackear la contraseña WIFI. Ahora, un diccionario no es más que un archivo donde cada salto de línea representa una contraseña a probar. 
+
+Luce algo así
+```
+password1
+password2
+superpassword
+iloveyou
+jajajanose
+passwordn
+```
+
+Y lo que hace aircrack es tratar de de hacer que los valores criptograficos coincidan entre el password probado y el **handshake** obtenido. Esto se hace en modo off-line.
+
+Una vez encontrado el resultado correcto aircrack nos mostrará nuestra contraseña.
+
+## Inconvenientes de un ataque de diccionario
+El problema con los ataques de diccionario es que si la contraseña no se encuentra dentro de este diccionario simplemente no aparecerá por arte de magia. Sin embargo, como ventaja, muchas personas utilizan contraseñas comunes y por eso los ataques de diccionario son altamente efectivos.
+
+**¿Podría generar un diccionario con todas las posibles combinaciones?**
+> "Well yes, but actually no"
+
+Aunque teóricamente es posible, computacionalmente no lo es. Pues esto se debe a algo llamado **Permutación y Combinatoria**. Sucede algo parecido a:
++ Una contraseña depende de su alfabeto (Carácteres que compondrán la contraseña)
++ Longitud (El largo que tendrá la contraseña)
++ Una computadora pasaría meses e incluso años tratando de resolver cada una de las posibilidades que impongan las dos condiciones anteriores.
+
+## ¿En dónde puedo conseguir uno de esos diccionarios?
++ Algunas distribuciones como Kali Linux incluyen algunos diccionarios de prueba
++ Puedes buscarlo en internet
++ Puedes realizar uno tu mismo con ayuda de un software (En algún momento publicaré el propio)
+
+### Links de diccionarios. No están probados. Entra bajo tu propio riesgo.
+https://crackstation.net/crackstation-wordlist-password-cracking-dictionary.htm
+https://hackxcrack.net/foro/criptografia-y-esteneografia/diccionarios-para-brute-force/
+
 
 # Información complementaria
 + <a href="https://medium.com/@Packt_Pub/the-deauthentication-attack-7872c916ed2a" target="_blank">the-deauthentication-attack</a>
